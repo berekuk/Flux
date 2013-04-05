@@ -1,6 +1,5 @@
-=head1 NAME
-
-Flux - stream processing toolkit
+# PODNAME: Flux
+# ABSTRACT: stream processing toolkit
 
 =head1 DESCRIPTION
 

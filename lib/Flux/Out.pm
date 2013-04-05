@@ -14,7 +14,7 @@ use Moo::Role;
 
 =head1 DESCRIPTION
 
-C<Flux::Out> is a role which every writing stream must implement.
+C<Flux::Out> is the role which every writing stream must implement.
 
 =head1 INTERFACE
 
@@ -24,7 +24,7 @@ C<Flux::Out> is a role which every writing stream must implement.
 
 It receives one scalar C<$item> as its argument.
 
-At the implementor's option, it can process C<$item> immediately or keep its value until C<commit()> is called.
+At the implementor's choice, it can process C<$item> immediately or keep its value until C<commit()> is called.
 
 Return value semantics is not specified.
 

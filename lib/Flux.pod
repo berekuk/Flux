@@ -23,11 +23,11 @@ tools for making these streams work together nicely: filters, data formatters, o
 
 =item *
 
-C<Flux::Catalog> module for simple access to your collection of streams.
+C<Flux::Catalog> module for the simple access to your collection of streams.
 
 =back
 
-Flux is a framework, but you can use lower-level parts of it without higher-level parts. For example, you can read and write files with C<Flux::File> without declaring it in a Flux catalog.
+Flux is a framework, but you can use lower-level parts of it without higher-level parts. For example, you can read and write files with C<Flux::File> without declaring it in the Flux catalog.
 
 =head1 INTERFACE STABILITY NOTICE
 

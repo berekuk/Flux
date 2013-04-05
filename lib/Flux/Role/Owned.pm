@@ -2,7 +2,7 @@ package Flux::Role::Owned;
 
 use Moo::Role;
 
-# ABSTRACT: role for stream objects which belong to specific user
+# ABSTRACT: role for stream objects that belong to a specific user
 
 =head1 METHODS
 

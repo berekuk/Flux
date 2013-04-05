@@ -2,7 +2,7 @@ package Flux::Role::Description;
 
 use Moo::Role;
 
-# ABSTRACT: role for stream objects which implement 'description'
+# ABSTRACT: role for stream objects that implement 'description'
 
 =head1 METHODS
 

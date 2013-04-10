@@ -26,9 +26,9 @@ Depending on context, mappers can map input or output streams, or be attached to
 
 The easiest way to create a new mapper is to use C<mapper(&)> function from C<Flux::Simple>. Alternatively, you can inherit your class from C<Flux::Mapper> and implement C<write> and/or C<write_chunk> methods (and optionally C<commit> too).
 
-C<|> operator is overloaded by all mappers. It works differently depending on a second argument. Synopsis contains some examples which demostrate it more clearly.
+C<|> operator is overloaded by all mappers. It works differently depending on a second argument. Synopsis contains some examples which show the details.
 
-Mappers don't have to return all results after each C<write> call, and results don't have to match mapper's input in one-to-one fashion. On the other hand, there exist some mapper clients which assume it to be so. In the future there'll probably emerge some specializations expressed in roles.
+Mappers don't have to return all results after each C<write> call, and results don't have to match mapper's input in one-to-one fashion. On the other hand, there are some mapper clients which assume it to be so. In the future there'll probably emerge some specializations expressed in roles.
 
 =cut
 
@@ -75,26 +75,24 @@ use overload '|' => sub {
 
 }, '""' => sub { $_[0] }; # strangely, when I overload |, I need to overload other operators too...
 
-=head1 METHODS
+=head1 INTERFACE
 
 =over
 
 =item I<write($item)>
 
-Processes one item and return some "mapped" items.
+Process one item and return some "mapped" (rewritten) items.
 
-Number of returned items can be any, from zero to several, so returned data should always be processed in list context.
-
-Implementation should be provided by inherited class.
+Number of returned items can be any, from zero to several, so returned data should always be processed in the list context, unless you're absolutely sure that your filter is of one-to-one kind.
 
 =cut
 requires 'write';
 
 =item I<write_chunk($chunk)>
 
-Processes one chunk and returns another, filtered chunk.
+Process one chunk and returns another, rewritten chunk.
 
-Filtered chunk can contain any number of items, independently from source chunk, but it should be arrayref, even if it's empty.
+Rewritten chunk can contain any number of items, independently from the original chunk, but it should be an arrayref, even if it's empty.
 
 =cut
 requires 'write_chunk';
@@ -102,6 +100,8 @@ requires 'write_chunk';
 =item I<commit()>
 
 C<commit> method can flush cached data and return remaining transformed items as plain list.
+
+If you don't need flushing, just return C<()>, or use C<Flux::Mapper::Easy> instead of this role.
 
 =cut
 requires 'commit';

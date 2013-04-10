@@ -68,4 +68,8 @@ sub mapper(&;&) {
     return Flux::Mapper::Anon->new(@args);
 }
 
+=back
+
+=cut
+
 1;

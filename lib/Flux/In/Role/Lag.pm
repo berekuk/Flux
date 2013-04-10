@@ -6,7 +6,7 @@ package Flux::In::Role::Lag;
 
 Input streams implementing this role can be asked for the amount of data remaining in the stream.
 
-Amount units are implementation-specific.
+Amount units are implementation-specific. Sometimes it's in bytes, sometimes it's in items.
 
 =cut
 

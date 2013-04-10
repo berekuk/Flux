@@ -24,7 +24,7 @@ It's API is currently identical to C<Flux::Out>, consisting of C<write>, C<write
 
 Depending on context, mappers can map input or output streams, or be attached to other mappers to construct more complex mappers.
 
-A simplest way to create new mapper is to use C<filter(&)> function from C<Flux::Simple>. Or you can inherit your class from C<Flux::Mapper> and implement C<write> and/or C<write_chunk> methods (and optionally C<commit> too).
+The easiest way to create a new mapper is to use C<mapper(&)> function from C<Flux::Simple>. Alternatively, you can inherit your class from C<Flux::Mapper> and implement C<write> and/or C<write_chunk> methods (and optionally C<commit> too).
 
 C<|> operator is overloaded by all mappers. It works differently depending on a second argument. Synopsis contains some examples which demostrate it more clearly.
 
@@ -32,21 +32,20 @@ Mappers don't have to return all results after each C<write> call, and results d
 
 =cut
 
-use Moo;
+use Moo::Role;
 
 use Carp;
-use Params::Validate qw(:all);
 use Scalar::Util qw(blessed);
 
 use Flux::Out;
 
-use Flux::Mapper::Anon;
-use Flux::Mapper::MappedIn;
-use Flux::Mapper::MappedOut;
-use Flux::Mapper::MappedMapper;
-
 use overload '|' => sub {
     my ($left, $right, $swap) = @_;
+
+    require Flux::Mapper::MappedIn;
+    require Flux::Mapper::MappedOut;
+    require Flux::Mapper::MappedMapper;
+
     if ($swap) {
         ($left, $right) = ($right, $left);
     }
@@ -57,19 +56,19 @@ use overload '|' => sub {
         croak "Right side of pipe is not a flux object, but '$right'";
     }
 
-    if ($left->isa('Flux::Mapper') and $right->isa('Flux::Mapper')) {
+    if ($left->does('Flux::Mapper') and $right->does('Flux::Mapper')) {
         # m | m
-        return Flux::Mapper::MappedMapper->new($left, $right);
+        return Flux::Mapper::MappedMapper->new(left => $left, right => $right);
     }
 
-    if ($left->isa('Flux::Mapper') and $right->isa('Flux::Out')) {
+    if ($left->does('Flux::Mapper') and $right->does('Flux::Out')) {
         # m | o
-        return Flux::Mapper::MappedOut->new($left, $right);
+        return Flux::Mapper::MappedOut->new(mapper => $left, out => $right);
     }
 
-    if ($left->isa('Flux::In') and $right->isa('Flux::Mapper')) {
+    if ($left->does('Flux::In') and $right->does('Flux::Mapper')) {
         # i | m
-        return Flux::Mapper::MappedIn->new($left, $right);
+        return Flux::Mapper::MappedIn->new(in => $left, mapper => $right);
     }
 
     croak "Strange arguments '$left' and '$right'";

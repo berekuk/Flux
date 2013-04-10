@@ -1,34 +1,31 @@
 package Flux::Mapper::MappedMapper;
 
-use Moo::Role;
+use Moo;
 with 'Flux::Mapper';
 
-sub new {
-    my ($class, $f1, $f2) = @_;
-    return bless {
-        f1 => $f1,
-        f2 => $f2,
-    } => $class;
-}
+has ['left', 'right'] => (
+    is => 'ro',
+    required => 1,
+);
 
 sub write {
     my ($self, $item) = @_;
-    my @items = $self->{f1}->write($item);
-    my @result = map { $self->{f2}->write($_) } @items;
+    my @items = $self->left->write($item);
+    my @result = map { $self->right->write($_) } @items;
     return (wantarray ? @result : $result[0]);
 }
 
 sub write_chunk {
     my ($self, $chunk) = @_;
-    $chunk = $self->{f1}->write_chunk($chunk);
-    return $self->{f2}->write_chunk($chunk);
+    $chunk = $self->left->write_chunk($chunk);
+    return $self->right->write_chunk($chunk);
 }
 
 sub commit {
     my ($self) = @_;
-    my @items = $self->{f1}->commit;
-    my $result = $self->{f2}->write_chunk(\@items);
-    push @$result, $self->{f2}->commit;
+    my @items = $self->left->commit;
+    my $result = $self->right->write_chunk(\@items);
+    push @$result, $self->right->commit;
     return @$result;
 }
 

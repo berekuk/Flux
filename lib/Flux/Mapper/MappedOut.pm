@@ -1,33 +1,43 @@
-package Stream::Filter::FilteredOut;
+package Flux::Mapper::MappedOut;
 
 use Moo;
 with 'Flux::Out';
 
-sub new {
-    my ($class, $filter, $out) = @_;
-    return bless {
-        filter => $filter,
-        out => $out,
-    } => $class;
-}
+has 'mapper' => (
+    is => 'ro',
+    required => 1,
+);
+
+has 'out' => (
+    is => 'ro',
+    required => 1,
+);
 
 sub write {
-    my ($self, $item) = @_;
-    my @items = $self->{filter}->write($item);
-    $self->{out}->write($_) for @items;
+    my $self = shift;
+    my ($item) = @_;
+
+    my @items = $self->mapper->write($item);
+    $self->out->write($_) for @items;
+    return;
 }
 
 sub write_chunk {
-    my ($self, $chunk) = @_;
-    $chunk = $self->{filter}->write_chunk($chunk);
-    return $self->{out}->write_chunk($chunk);
+    my $self = shift;
+    my ($chunk) = @_;
+
+    $chunk = $self->mapper->write_chunk($chunk);
+    $self->out->write_chunk($chunk);
+    return;
 }
 
 sub commit {
     my ($self) = @_;
-    my @items = $self->{filter}->commit;
-    $self->{out}->write_chunk(\@items);
-    return $self->{out}->commit;
+
+    my @items = $self->mapper->commit; # flushing the stuff remaining in possible mapper buffers
+    $self->out->write_chunk(\@items);
+    $self->out->commit;
+    return;
 }
 
 1;

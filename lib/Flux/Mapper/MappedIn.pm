@@ -1,67 +1,65 @@
-package Stream::Filter::FilteredIn;
+package Flux::Mapper::MappedIn;
 
 use Moo;
 with 'Flux::In';
 
-sub new {
-    my ($class, $in, $filter) = @_;
-    return bless {
-        filter => $filter,
-        in => $in,
-    } => $class;
-}
+has 'mapper' => (
+    is => 'ro',
+    required => 1,
+);
+
+has 'in' => (
+    is => 'ro',
+    required => 1,
+);
 
 sub read {
-    my ($self) = @_;
-    while (my $item = $self->{in}->read()) {
-        my @filtered = $self->{filter}->write($item);
-        next unless @filtered;
-        die "One-to-many not implemented in source filters" unless @filtered == 1;
-        return $filtered[0];
+    my $self = shift;
+
+    while (my $item = $self->in->read) {
+        my @mapped = $self->mapper->write($item);
+        next unless @mapped;
+        die "One-to-many not implemented in input stream mappers" unless @mapped == 1;
+        return $mapped[0];
     }
     return; # underlying input stream is depleted
 }
 
 sub read_chunk {
-    my ($self, $limit) = @_;
-    my $chunk = $self->{in}->read_chunk($limit);
+    my $self = shift;
+    my ($limit) = @_;
+
+    my $chunk = $self->in->read_chunk($limit);
     return unless $chunk;
-    return $self->{filter}->write_chunk($chunk);
+    return $self->mapper->write_chunk($chunk);
 }
 
 sub commit {
     my ($self) = @_;
-    my @items = $self->{filter}->commit;
-    die "flushable filters cannot be attached to input streams" if @items;
+    my @items = $self->mapper->commit;
+    die "flushable mappers cannot be attached to input streams" if @items;
     #FIXME: check it earlier
-    $self->{in}->commit;
+    $self->in->commit;
 }
 
 sub lag {
     my $self = shift;
-    die "underlying input stream doesn't implement Lag role" unless $self->{in}->DOES('Stream::In::Role::Lag');
-    return $self->{in}->lag;
+    die "underlying input stream doesn't implement Lag role" unless $self->in->does('Flux::In::Role::Lag');
+    return $self->in->lag;
 }
 
-sub shift {
+around 'does' => sub {
+    my $orig = shift;
     my $self = shift;
-    my $item = $self->read or return;
-    return @$item;
-}
+    return 1 if $orig->($self, @_);
 
-sub DOES {
-    my ($self, $role) = @_;
-    if ($role eq 'Stream::In::Role::Lag' or $role eq 'Stream::In::Role::Shift') {
-        # Some roles depen on being implemented by the underlying input stream.
-        # I guess in future we'll have lots of such role propagating logic... in this case moose metaclasses would be handy.
-        return $self->{in}->DOES($role);
+    my ($role) = @_;
+
+    if ($role eq 'Flux::In::Role::Lag') {
+        # Some roles depend on being implemented by the underlying input stream.
+        return $self->in->does($role);
     }
-    return $self->SUPER::DOES($role);
-}
-
-{
-    no strict 'refs';
-    *does = \&DOES;
-}
+    return;
+};
 
 1;

@@ -1,7 +1,6 @@
 package Flux::Mapper::Easy;
 
 use Moo::Role;
-
 with 'Flux::Mapper';
 
 sub write_chunk {

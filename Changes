@@ -1,6 +1,10 @@
 Revision history for Flux
 
 {{$NEXT}}
+    * Flux::Format
+    * Flux::MemoryStorage
+    * Flux::In::Role::Easy and Flux::Out::Role::Easy
+    * Flux::Storage::Role::ClientList
 
 1.00    2013-04-11
     * First opensource release.

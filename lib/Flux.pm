@@ -1,5 +1,25 @@
-# PODNAME: Flux
+package Flux;
+
 # ABSTRACT: stream processing toolkit
+
+=head1 SYNOPSIS
+
+use Flux::Simple qw( array_in array_out mapper );
+
+my $in = array_in([ 5, 6, 7 ]);
+$in = $in | mapper { shift() * 2 };
+
+my @result;
+my $out = array_out(\@result);
+$out = mapper { shift() * 3 } | mapper { shift() . "x" } | $out;
+
+$out->write($in->read);
+$out->write($in->read);
+say for @result;
+
+# Output:
+# 30x
+# 36x
 
 =head1 DESCRIPTION
 
@@ -50,3 +70,7 @@ Unlike Flux, it doesn't support persistent data storing; Flux has fault-toleranc
 L<IO::Pipeline> syntax is similar to Flux filters.
 
 I'm sure there're many others. Stream processing is reinvented often.
+
+=cut
+
+1;

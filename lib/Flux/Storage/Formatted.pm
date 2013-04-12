@@ -17,7 +17,7 @@ sub write {
     my $self = shift;
     my ($item) = @_;
 
-    my @filtered = $self->format->decoder->write($item);
+    my @filtered = $self->format->encoder->write($item);
     return unless @filtered;
     $self->storage->write($_, @_) for @filtered; # would write_chunk be better?
 }
@@ -26,7 +26,7 @@ sub write_chunk {
     my $self = shift;
     my $chunk = shift;
     $self->storage->write_chunk(
-        $self->storage->encoder->write_chunk($chunk),
+        $self->format->encoder->write_chunk($chunk),
         @_ # passing the rest of parameters as-is, some storages accept additional settings on write(), e.g. DelayedQueue
     );
 }
@@ -34,7 +34,7 @@ sub write_chunk {
 sub in {
     my $self = shift;
     my $in = $self->storage->in(@_);
-    return ($in | $self->decoder);
+    return ($in | $self->format->decoder);
 }
 
 sub commit {
@@ -64,7 +64,7 @@ sub description {
     my $self = shift;
 
     my $inner;
-    if ($self->storage->does('Flux::Role::Description') {
+    if ($self->storage->does('Flux::Role::Description')) {
         $inner = $self->storage->description(@_);
     }
     else {

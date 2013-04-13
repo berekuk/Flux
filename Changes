@@ -1,6 +1,8 @@
 Revision history for Flux
 
 {{$NEXT}}
+
+1.01    2013-04-13
     * Flux::Format
     * Flux::MemoryStorage
     * Flux::In::Role::Easy and Flux::Out::Role::Easy

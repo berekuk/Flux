@@ -31,6 +31,15 @@ sub check_lag :Tests {
     is $in->lag, 0;
 }
 
+sub pos_after_null_read :Tests {
+    my $ms = Flux::Storage::Memory->new();
+    my $in = $ms->in('blah');
+    is $in->read, undef;
+    $ms->write('aaa');
+    $ms->commit;
+    is $in->read, 'aaa';
+}
+
 my $basic_test = Flux::Test::Out->new(sub {
     Flux::Storage::Memory->new()
 });
@@ -49,4 +58,3 @@ Test::Class->runtests(
     $rw_test,
     __PACKAGE__->new,
 );
-

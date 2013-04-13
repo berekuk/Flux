@@ -29,6 +29,7 @@ has 'pos' => (
 sub read {
     my $self = shift;
     my $item = $self->storage->_read($self->pos);
+    return unless $item;
     $self->pos($self->pos + 1);
     return $item;
 }

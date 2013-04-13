@@ -1,5 +1,13 @@
 package Flux::Storage::Formatted;
 
+# ABSTRACT: Representation of a storage wrapped with a format.
+
+=head1 DESCRIPTION
+
+Don't create instances of this class directly. Use C<< $format->wrap($storage) >> instead.
+
+=cut
+
 use Moo;
 with 'Flux::Storage';
 
@@ -75,5 +83,11 @@ sub description {
         "format: ".blessed($self->format)."\n"
         .$inner;
 }
+
+=head1 SEE ALSO
+
+L<Flux::Format>
+
+=cut
 
 1;

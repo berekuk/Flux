@@ -1,5 +1,18 @@
 package Flux::Simple::ArrayIn;
 
+# ABSTRACT: input stream representation of an array
+
+=head1 SYNOPSIS
+
+    use Flux::Simple::ArrayIn;
+    $in = Flux::Simple::ArrayIn->new(\@items);
+
+=head1 DESCRIPTION
+
+Usually, you shouldn't create instances of this class directly. Use C<array_in> helper from L<Flux::Simple> instead.
+
+=cut
+
 use Moo;
 with 'Flux::In';
 

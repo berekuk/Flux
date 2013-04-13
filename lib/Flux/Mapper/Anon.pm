@@ -1,5 +1,13 @@
 package Flux::Mapper::Anon;
 
+# ABSTRACT: callback-style mapper
+
+=head1 DESCRIPTION
+
+Usually, you shouldn't create instances of this class directly. Use C<mapper> helper from L<Flux::Simple> instead.
+
+=cut
+
 use Moo;
 with 'Flux::Mapper::Easy';
 

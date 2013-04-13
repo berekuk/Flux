@@ -1,5 +1,15 @@
 package Flux::Mapper::MappedOut;
 
+# ABSTRACT: representation of mapper|out
+
+=head1 DESCRIPTION
+
+Don't create instances of this class directly.
+
+Use C<$mapper | $out> syntax sugar instead.
+
+=cut
+
 use Moo;
 with 'Flux::Out';
 

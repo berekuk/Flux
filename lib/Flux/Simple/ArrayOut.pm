@@ -1,5 +1,25 @@
 package Flux::Simple::ArrayOut;
 
+# ABSTRACT: output stream which stores data in a given array
+
+=head1 SYNOPSIS
+
+    use Flux::Simple::ArrayOut;
+    $out = Flux::Simple::ArrayIn->new(\@data);
+    $out->write('foo');
+    $out->write('bar');
+
+    say for @data
+    # Prints:
+    # foo
+    # bar
+
+=head1 DESCRIPTION
+
+Usually, you shouldn't create instances of this class directly. Use C<array_out> helper from L<Flux::Simple> instead.
+
+=cut
+
 use Moo;
 with 'Flux::Out';
 

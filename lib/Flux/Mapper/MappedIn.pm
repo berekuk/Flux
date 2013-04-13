@@ -1,5 +1,15 @@
 package Flux::Mapper::MappedIn;
 
+# ABSTRACT: representation of in|mapper
+
+=head1 DESCRIPTION
+
+Don't create instances of this class directly.
+
+Use C<$in | $mapper> sytax sugar instead.
+
+=cut
+
 use Moo;
 with 'Flux::In';
 

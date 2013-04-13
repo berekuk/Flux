@@ -1,5 +1,15 @@
 package Flux::Mapper::MappedMapper;
 
+# ABSTRACT: representation of mapper|mapper
+
+=head1 DESCRIPTION
+
+Don't create instances of this class directly.
+
+Use C<$mapper1 | $mapper2> syntax sugar instead.
+
+=cut
+
 use Moo;
 with 'Flux::Mapper';
 

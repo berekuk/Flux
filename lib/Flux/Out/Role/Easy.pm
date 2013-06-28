@@ -1,6 +1,22 @@
 package Flux::Out::Role::Easy;
 
-# ABSTRACT: role to implement output streams with only one write() method
+# ABSTRACT: simplified version of Flux::Out role
+
+=head1 CONSUMER SYNOPSIS
+
+    use Moo;
+    with "Flux::Out::Role::Easy";
+
+    sub write {
+        my ($self, $item) = @_;
+        say $item;
+    }
+
+=head1 DESCRIPTION
+
+This role is an extension of L<Flux::Out> role. It provides the sane C<write_chunk> implementation and the empty C<commit> implementation, so you only have to define C<write>.
+
+=cut
 
 use Moo::Role;
 with 'Flux::Out';
@@ -18,5 +34,11 @@ sub write_chunk {
 
 sub commit {
 }
+
+=head1 SEE ALSO
+
+This role is a specialization of L<Flux::Out>.
+
+=cut
 
 1;

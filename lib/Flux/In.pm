@@ -1,18 +1,50 @@
 package Flux::In;
 
-# ABSTRACT: input stream role
+# ABSTRACT: input stream interface
 
 use Moo::Role;
 
 =head1 SYNOPSIS
 
+    # How to use objects implementing this role
+
     $line = $in->read;
     $chunk = $in->read_chunk($limit);
     $in->commit;
 
+=head1 CONSUMER SYNOPSIS
+
+    # How to consume this role
+
+    use Moo;
+    with "Flux::In";
+
+    has counter => (
+        is => "ro",
+        default => sub { 0 },
+    );
+
+    sub read {
+        my ($self) = @_;
+        my $counter = $self->counter;
+        $self->counter($counter + 1);
+        return "Line $counter";
+    }
+
+    sub read_chunk {
+        my ($self, $limit) = @_;
+        my $counter = $self->counter;
+        $self->counter($counter + $limit);
+        return [ $counter .. $counter + $limit - 1 ];
+    }
+
+    sub commit {
+        say "commiting position";
+    }
+
 =head1 DESCRIPTION
 
-C<Flux::In> is the role which every reading stream must implement.
+C<Flux::In> is a role which every reading stream must implement.
 
 Consumers must implement C<read>, C<read_chunk> and C<commit> methods.
 
@@ -50,6 +82,14 @@ Stream's author should make sure that stream is still readable after this.
 requires 'commit';
 
 =back
+
+=cut
+
+=head1 SEE ALSO
+
+L<Flux::In::Role::Easy> - specialization of this role for those who don't want to bother with 3 methods, and want to just implement C<read()>.
+
+L<Flux::In::Role::Lag> - role for input streams which are aware of their lag.
 
 =cut
 

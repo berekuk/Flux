@@ -1,6 +1,7 @@
 Revision history for Flux
 
 {{$NEXT}}
+    * improve docs
 
 1.02    2013-04-14
     * Flux::Storage::Memory: don't advance client position on undef reads

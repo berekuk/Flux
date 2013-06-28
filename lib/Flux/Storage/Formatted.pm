@@ -25,9 +25,9 @@ sub write {
     my $self = shift;
     my ($item) = @_;
 
-    my @filtered = $self->format->encoder->write($item);
-    return unless @filtered;
-    $self->storage->write($_, @_) for @filtered; # would write_chunk be better?
+    my @mapped = $self->format->encoder->write($item);
+    return unless @mapped;
+    $self->storage->write($_, @_) for @mapped; # would write_chunk be better?
 }
 
 sub write_chunk {

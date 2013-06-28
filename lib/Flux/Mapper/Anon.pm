@@ -9,7 +9,7 @@ Usually, you shouldn't create instances of this class directly. Use C<mapper> he
 =cut
 
 use Moo;
-with 'Flux::Mapper::Easy';
+with 'Flux::Mapper::Role::Easy';
 
 has 'cb' => (
     is => 'ro',

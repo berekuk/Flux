@@ -20,7 +20,7 @@ use Moo::Role;
     with "Flux::In";
 
     has counter => (
-        is => "ro",
+        is => "rw",
         default => sub { 0 },
     );
 
